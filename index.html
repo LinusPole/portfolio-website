@@ -59,10 +59,7 @@
             <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <div class="about-image">
-                    <!-- FIXED: Proper image path and fallback -->
-                    <img src="images/linus.jpg" alt="Linus Tinga Pole" class="profile-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    
-                    <!-- Fallback placeholder (shows if image fails to load) -->
+                    <img src="images/tinga.jpg" alt="Linus Tinga Pole" class="profile-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div class="image-placeholder" style="display: none;">
                         <i class="fas fa-user"></i>
                     </div>
@@ -85,7 +82,7 @@
                             <span>Bachelors Degree in Information and Communication Technology</span>
                         </div>
                     </div>
-                    <a href="#" class="btn btn-primary">Download Resume</a>
+                    <a href="resume.pdf" class="btn btn-primary" download="Linus_Tinga_Pole_Resume.pdf"><i class="fas fa-download"></i> Download Resume</a>
                 </div>
             </div>
         </div>
@@ -232,20 +229,24 @@
                         </a>
                     </div>
                 </div>
-                <form class="contact-form" id="contactForm">
+                <form class="contact-form" id="contactForm" action="https://formspree.io/f/mreolpnb" method="POST">
                     <div class="form-group">
-                        <input type="text" id="name" placeholder="Your Name" required>
+                        <input type="text" name="name" id="name" placeholder="Your Name" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" placeholder="Your Email" required>
+                        <input type="email" name="email" id="email" placeholder="Your Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="subject" placeholder="Subject" required>
+                        <input type="text" name="subject" id="subject" placeholder="Subject" required>
                     </div>
                     <div class="form-group">
-                        <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+                        <textarea name="message" id="message" rows="5" placeholder="Your Message" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
+                    <input type="hidden" name="_next" value="https://yourdomain.com/thanks.html">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span class="btn-text">Send Message</span>
+                        <span class="btn-loading" style="display: none;"><i class="fas fa-spinner fa-spin"></i> Sending...</span>
+                    </button>
                 </form>
             </div>
         </div>

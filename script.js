@@ -5,8 +5,6 @@ const navLinksItems = document.querySelectorAll('.nav-links a');
 
 hamburger.addEventListener('click', () => {
     navLinks.classList.toggle('active');
-    
-    // Animate hamburger to X
     hamburger.classList.toggle('active');
 });
 
@@ -75,7 +73,6 @@ revealElements.forEach(element => {
 });
 
 window.addEventListener('scroll', revealOnScroll);
-// Trigger once on load
 revealOnScroll();
 
 // Smooth Scroll for Navigation Links
@@ -93,42 +90,69 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Contact Form Handling
+// Contact Form Handling with Formspree
 const contactForm = document.getElementById('contactForm');
+const submitBtn = document.getElementById('submitBtn');
+const btnText = submitBtn.querySelector('.btn-text');
+const btnLoading = submitBtn.querySelector('.btn-loading');
 
-contactForm.addEventListener('submit', (e) => {
+contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // Get form values
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
+    // Show loading state
+    submitBtn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoading.style.display = 'inline';
     
-    // Simple validation
-    if (name && email && subject && message) {
-        // Show success message
-        showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+    const formData = new FormData(contactForm);
+    const action = contactForm.getAttribute('action');
+    
+    // Check if Formspree is configured
+    if (action.includes('YOUR_FORM_ID')) {
+        showNotification('Please configure your Formspree form ID first. See instructions in the file.', 'error');
+        submitBtn.disabled = false;
+        btnText.style.display = 'inline';
+        btnLoading.style.display = 'none';
+        return;
+    }
+    
+    try {
+        const response = await fetch(action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         
-        // Reset form
-        contactForm.reset();
-        
-        // In a real scenario, you would send this to a server
-        console.log('Form Data:', { name, email, subject, message });
-    } else {
-        showNotification('Please fill in all fields.', 'error');
+        if (response.ok) {
+            showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+            contactForm.reset();
+        } else {
+            const data = await response.json();
+            if (data.errors) {
+                showNotification(data.errors.map(error => error.message).join(', '), 'error');
+            } else {
+                showNotification('Oops! Something went wrong. Please try again.', 'error');
+            }
+        }
+    } catch (error) {
+        showNotification('Oops! Something went wrong. Please try again.', 'error');
+    } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        btnText.style.display = 'inline';
+        btnLoading.style.display = 'none';
     }
 });
 
 // Notification System
 function showNotification(message, type) {
-    // Remove existing notifications
     const existingNotification = document.querySelector('.notification');
     if (existingNotification) {
         existingNotification.remove();
     }
     
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.innerHTML = `
@@ -136,7 +160,6 @@ function showNotification(message, type) {
         <span>${message}</span>
     `;
     
-    // Add styles
     notification.style.cssText = `
         position: fixed;
         top: 100px;
@@ -153,7 +176,6 @@ function showNotification(message, type) {
         animation: slideIn 0.3s ease;
     `;
     
-    // Add animation keyframes if not exists
     if (!document.querySelector('#notification-styles')) {
         const style = document.createElement('style');
         style.id = 'notification-styles';
@@ -172,11 +194,10 @@ function showNotification(message, type) {
     
     document.body.appendChild(notification);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease forwards';
         setTimeout(() => notification.remove(), 300);
-    }, 3000);
+    }, 5000);
 }
 
 // Typing Effect for Hero Section
@@ -194,7 +215,6 @@ const typeWriter = () => {
     }
 };
 
-// Start typing effect when page loads
 window.addEventListener('load', () => {
     setTimeout(typeWriter, 500);
 });
@@ -229,7 +249,6 @@ const animateNumbers = () => {
     });
 };
 
-// Trigger number animation when hero is visible
 const heroObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -244,4 +263,4 @@ if (heroSection) {
     heroObserver.observe(heroSection);
 }
 
-console.log('Portfolio loaded successfully! 🚀');
+console.log('Portfolio loaded successfully!');
