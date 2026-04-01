@@ -275,6 +275,17 @@ section {
 }
 
 /* About Section */
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    align-items: start;  /* Changed from center to start */
+    margin-top: 2rem;    /* Add space below the title */
+}
+
+.section-title {
+    margin-bottom: 4rem;  /* Increase space below section titles */
+}
 .about {
     background: var(--bg-white);
 }
